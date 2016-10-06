@@ -24,17 +24,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@javax.persistence.Table(name = "TabField")
 public class TableField implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "ord", nullable = false)
     private Integer orderNum;
+    @Column(nullable = false)
     private String type;
+    
     private Integer rowId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "row", referencedColumnName = "id")
+    private TableRow row;
 
     public TableField(Integer orderNum, String type) {
         this.id = null;

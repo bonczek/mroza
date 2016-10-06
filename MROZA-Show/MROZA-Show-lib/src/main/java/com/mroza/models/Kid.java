@@ -26,17 +26,40 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@javax.persistence.Table(name = "Kid")
+@NamedQueries({
+    @NamedQuery(name = "selectAllKids", query = "FROM Kid k WHERE k.archived = false ORDER BY k.code"),
+    @NamedQuery(name = "selectKidWithEdgesProgramsAndPeriods", query = "FROM Kid k WHERE k.id = :kidId"),
+    @NamedQuery(name = "selectKidWithCode", query = "FROM Kid k WHERE k.code = :code")
+})
 public class Kid implements Serializable {
 
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;    
+    @Column(nullable = false)
     private String code;
+    @Column(nullable = false)
     private boolean archived;
 
+    @OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Program> programs;
+    @OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Period> periods;
 }

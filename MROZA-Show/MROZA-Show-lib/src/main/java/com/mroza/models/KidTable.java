@@ -27,30 +27,64 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@javax.persistence.Table(name = "KidTab")
 public class KidTable extends FilterableModel implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "collecting_learning", nullable = false)
     private boolean collectingLearning;
+    @Column(name = "collecting_generalization", nullable = false)
     private boolean collectingGeneralization;
+    @Column(name = "finished_learning", nullable = false)
     private boolean finishedLearning;
+    @Column(name = "finished_generalization", nullable = false)
     private boolean finishedGeneralization;
+    @Column
     private String note;
+    @Column(name = "IOA", nullable = false)
     private boolean isIOA;
+    @Column(name = "pretest", nullable = false)
     private boolean isPretest;
+    @Column(name = "last_edit_datetime")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastModDate;
+    @Column(name = "generalization_fill_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date generalizationFillDate;
+    @Column(name = "learning_fill_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date learningFillDate;
 
     private Integer tableId;
     private Integer periodId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "table", referencedColumnName = "id")
     private Table table;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "period", referencedColumnName = "id")
     private Period period;
+    @OneToMany(mappedBy = "kidTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ResolvedField> resolvedFields;
 
     @Override

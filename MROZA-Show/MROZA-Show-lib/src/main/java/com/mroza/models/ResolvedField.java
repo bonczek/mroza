@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +40,11 @@ public class ResolvedField implements Serializable {
     private Integer kidTableId;
     private Integer tableFieldId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "kidTable", referencedColumnName = "id")
     private KidTable kidTable;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tableField", referencedColumnName = "id")
     private TableField tableField;
 
     public ResolvedField(String value, KidTable kidTable, TableField tableField) {
