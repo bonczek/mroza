@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,30 +41,42 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "ResolvePeriod")
+@javax.persistence.Table(name = "resolveperiod")
 public class Period implements Serializable {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "begin_date", nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "begin_date")
+    @Temporal(TemporalType.DATE)
     private Date beginDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_date", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "end_date")
+    @Temporal(TemporalType.DATE)
     private Date endDate;
     
+    @Transient
     private Integer kidId;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kid", referencedColumnName = "id")
+    @JoinColumn(name = "kid_id", referencedColumnName = "id")
     private Kid kid;
+    
     @OneToMany(mappedBy = "period", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<KidTable> kidTables;
 
@@ -81,7 +94,7 @@ public class Period implements Serializable {
     }
 
     public Period(Integer id) {
-        this.id = id;
+        this.id = Integer.toUnsignedLong(id);
         this.kidTables = new ArrayList<>();
     }
 }

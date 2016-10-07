@@ -27,17 +27,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public class KidsDao {
 
     @Inject
     private SqlSession sqlSession;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public  List<Kid> selectAllKids() {
+    public  List<Kid> selectAllKids() {                
         List<Kid> kids = sqlSession.selectList("kidsMapper.selectAllKids");
-        if(kids == null)
+        if (kids == null) {
             return new ArrayList<>();
+        }
         return kids;
+//        List<Kid> kids = entityManager.createNamedQuery("selectAllKids").getResultList();
+//        if(kids == null)
+//            return new ArrayList<>();
+//        return kids;
     }
 
     public Kid selectKidWithEdgesProgramsAndPeriods(int kidId) {

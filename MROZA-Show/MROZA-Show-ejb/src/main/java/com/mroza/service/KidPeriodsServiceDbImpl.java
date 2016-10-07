@@ -61,13 +61,13 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
     @Override
     @Transactional
     public void replaceAssignmentTableToPeriod(KidTable previousKidTable, Table newTable) {
-        kidTablesDao.deleteKidTableById(previousKidTable.getId());
+        kidTablesDao.deleteKidTableById(previousKidTable.getId().intValue());
         this.assignTableToPeriod(newTable, new Period(previousKidTable.getPeriodId()));
     }
 
     @Override
     public void deleteKidTable(KidTable table) {
-        kidTablesDao.deleteKidTableById(table.getId());
+        kidTablesDao.deleteKidTableById(table.getId().intValue());
     }
 
     @Override
@@ -87,13 +87,13 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
     @Override
     public boolean hasKidTableFilledResolvedFields(KidTable kidTable) {
         List<ResolvedField> nonEmptyResolvedFields = resolvedFieldsDao.selectNonEmptyResolvedFieldsByKidTableId(
-                kidTable.getId());
+                kidTable.getId().intValue());
         return !(nonEmptyResolvedFields.size() == 0);
     }
 
     @Override
     public boolean hasTableFilledResolvedFields(Table table) {
-        List<ResolvedField> nonEmptyResolvedFields = resolvedFieldsDao.selectNonEmptyResolvedFieldsByTableId(table.getId());
+        List<ResolvedField> nonEmptyResolvedFields = resolvedFieldsDao.selectNonEmptyResolvedFieldsByTableId(table.getId().intValue());
         return !(nonEmptyResolvedFields.size() == 0);
     }
 
@@ -104,7 +104,7 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
         periodsDao.insertPeriod(period);
         if(period.getKidTables() != null && !period.getKidTables().isEmpty()) {
             for(KidTable table : period.getKidTables())
-                table.setPeriodId(period.getId());
+                table.setPeriodId(period.getId().intValue());
             period.getKidTables().forEach(kidTablesDao::insertKidTable);
         }
     }
@@ -122,7 +122,7 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
     @Override
     public List<KidTable> getKidTablesWithTableAndProgramByPeriod(Period period) {
         if(period != null && period.getId() != null)
-            return kidTablesDao.selectKidTableByPeriodIdWithEdgeTableProgram(period.getId());
+            return kidTablesDao.selectKidTableByPeriodIdWithEdgeTableProgram(period.getId().intValue());
         else
             return new ArrayList<>();
     }
@@ -130,7 +130,7 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
     @Override
     public List<KidTable> getKidTablesWithTableAndRowAndFieldAndProgramByPeriod(Period period) {
         if(period != null && period.getId() != null)
-            return kidTablesDao.selectKidTableByPeriodIdWithEdgeTableRowFieldProgram(period.getId());
+            return kidTablesDao.selectKidTableByPeriodIdWithEdgeTableRowFieldProgram(period.getId().intValue());
         else
             return new ArrayList<>();
     }
@@ -151,7 +151,7 @@ public class KidPeriodsServiceDbImpl implements Serializable, KidPeriodsService 
         if(period.getKidTables() != null && !period.getKidTables().isEmpty()) {
             List<Integer> ids = new ArrayList<>();
             for (KidTable table : period.getKidTables())
-                ids.add(table.getId());
+                ids.add(table.getId().intValue());
             kidTablesDao.deleteKidTables(ids);
         }
         periodsDao.removePeriod(period);

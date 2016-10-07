@@ -83,14 +83,14 @@ public class KidPeriodsServiceDbImplTest {
     public void getKidTableByIdTest() {
         KidTable expectedKidTable = kidTablesDao.getKidsTablesByNote("Notatka 2").get(0);
 
-        KidTable resultedKidTable = kidPeriodsService.getKidTableById(expectedKidTable.getId());
+        KidTable resultedKidTable = kidPeriodsService.getKidTableById(expectedKidTable.getId().intValue());
 
         Assert.assertTrue(new KidTableArgumentMatcher(expectedKidTable).matches(resultedKidTable));
     }
 
     @Test
     public void getTablesByProgramIdTest() {
-        List<Table> resultedTables = kidPeriodsService.getTablesByProgramId(exampleKids.get(0).getPrograms().get(0).getId());
+        List<Table> resultedTables = kidPeriodsService.getTablesByProgramId(exampleKids.get(0).getPrograms().get(0).getId().intValue());
 
         Assert.assertEquals(2, resultedTables.size());
 
@@ -119,13 +119,13 @@ public class KidPeriodsServiceDbImplTest {
     @Test
     public void assignTableToPeriodTest() {
         Table exampleTable = new Table();
-        exampleTable.setId(5);
+        exampleTable.setId(5L);
         List<TableRow> tableRowList = new ArrayList<>();
         for (int rowNumber = 0; rowNumber < 5; rowNumber++)
             tableRowList.add(new TableRow("Akcja", rowNumber, 3, 0));
         exampleTable.setTableRows(tableRowList);
         Period examplePeriod = new Period();
-        examplePeriod.setId(10);
+        examplePeriod.setId(10L);
         KidTable expectedKidTable = new KidTable(true, false,  exampleTable, examplePeriod);
 
         KidTablesDao kidTablesDaoMock = mock(KidTablesDao.class);
@@ -170,12 +170,12 @@ public class KidPeriodsServiceDbImplTest {
     @Test
     public void addPeriodTest() {
         Period examplePeriod = new Period(
-                Utils.strToDate("14-12-2015"), Utils.strToDate("17-12-2015"), exampleKids.get(0).getId());
+                Utils.strToDate("14-12-2015"), Utils.strToDate("17-12-2015"), exampleKids.get(0).getId().intValue());
 
         kidPeriodsService.addPeriod(examplePeriod);
         sqlSession.commit();
 
-        Period resultedPeriod = periodsDao.selectPeriodById(examplePeriod.getId());
+        Period resultedPeriod = periodsDao.selectPeriodById(examplePeriod.getId().intValue());
         Assert.assertEquals(examplePeriod.getBeginDate(), resultedPeriod.getBeginDate());
         Assert.assertEquals(examplePeriod.getEndDate(), resultedPeriod.getEndDate());
     }
@@ -189,14 +189,14 @@ public class KidPeriodsServiceDbImplTest {
         kidPeriodsService.updatePeriod(examplePeriod);
         sqlSession.commit();
 
-        Period resultedPeriod = periodsDao.selectPeriodById(examplePeriod.getId());
+        Period resultedPeriod = periodsDao.selectPeriodById(examplePeriod.getId().intValue());
         Assert.assertEquals(examplePeriod.getBeginDate(), resultedPeriod.getBeginDate());
         Assert.assertEquals(examplePeriod.getEndDate(), resultedPeriod.getEndDate());
     }
 
     @Test
     public void getKidTableByPeriodIdTest() {
-        List<KidTable> kidTables = kidPeriodsService.getKidTablesWithTableAndProgramByPeriodId(exampleKids.get(0).getPeriods().get(0).getId());
+        List<KidTable> kidTables = kidPeriodsService.getKidTablesWithTableAndProgramByPeriodId(exampleKids.get(0).getPeriods().get(0).getId().intValue());
 
         Assert.assertEquals(2, kidTables.size());
         Assert.assertNotNull(kidTables.get(0).getTable().getProgram());
@@ -204,7 +204,7 @@ public class KidPeriodsServiceDbImplTest {
 
     @Test
     public void getKidProgramsNotInPeriodTest() {
-        List<Program> programs = kidPeriodsService.getKidProgramsNotInPeriod(exampleKids.get(0).getPeriods().get(1).getId());
+        List<Program> programs = kidPeriodsService.getKidProgramsNotInPeriod(exampleKids.get(0).getPeriods().get(1).getId().intValue());
         Assert.assertEquals(exampleKids.get(0).getPrograms().size(), programs.size());
     }
 
@@ -212,8 +212,8 @@ public class KidPeriodsServiceDbImplTest {
     public void removePeriodTest() {
 
         Period periodToDelete = exampleKids.get(0).getPeriods().get(0);
-        Integer periodIdToDelete = periodToDelete.getId();
-        Integer kidTableIdToDelete = periodToDelete.getKidTables().get(0).getId();
+        Integer periodIdToDelete = periodToDelete.getId().intValue();
+        Integer kidTableIdToDelete = periodToDelete.getKidTables().get(0).getId().intValue();
 
         Period period = periodsDao.selectPeriodById(periodIdToDelete);
         KidTable kidTable = kidTablesDao.selectKidTableByIdWithEdgeTable(kidTableIdToDelete);

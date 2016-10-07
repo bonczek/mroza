@@ -68,8 +68,8 @@ public class ProgramServiceDbImplUpdateProgramTest {
         this.programsServiceDb.updateProgramsWithSymbol(this.program);
         sqlSession.commit();
 
-        Program changedProgram = databaseUtils.getProgramById(this.program.getId());
-        Program changedAssignedProgram = databaseUtils.getProgramById(this.assignedProgram.getId());;
+        Program changedProgram = databaseUtils.getProgramById(this.program.getId().intValue());
+        Program changedAssignedProgram = databaseUtils.getProgramById(this.assignedProgram.getId().intValue());;
 
         assertEquals("Program should have changed name", changedName , changedProgram.getName());
         assertEquals("Program should have changed symbol", changedSymbol, changedProgram.getSymbol());

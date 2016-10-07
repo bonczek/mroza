@@ -60,7 +60,7 @@ public class ProgramsDaoTest {
         ReflectionWrapper.setPrivateField(programsDao, "sqlSession", sqlSession);
 
         List<Program> programsNotInPeriod = programsDao.selectKidProgramsNotInPeriodByPeriodId(
-                exampleKids.get(0).getPeriods().get(0).getId());
+                exampleKids.get(0).getPeriods().get(0).getId().intValue());
         Assert.assertEquals("Program 3", programsNotInPeriod.get(0).getName());
         Assert.assertEquals(1, programsNotInPeriod.size());
     }

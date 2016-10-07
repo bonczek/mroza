@@ -103,8 +103,8 @@ public class Utils {
 
     public static void initKidDeeply(List<Kid> exampleKids, String programsSymbolPrefix) {
         List<Period> kidPeriods = new ArrayList<>();
-        kidPeriods.add(new Period(-1, strToDate("5-11-2014"), strToDate("10-11-2014"), null, null, new ArrayList<>()));
-        kidPeriods.add(new Period(-1, strToDate("5-11-2014"), strToDate("10-11-2014"), null, null, new ArrayList<>()));
+        kidPeriods.add(new Period(-1L, strToDate("5-11-2014"), strToDate("10-11-2014"), null, null, new ArrayList<>()));
+        kidPeriods.add(new Period(-1L, strToDate("5-11-2014"), strToDate("10-11-2014"), null, null, new ArrayList<>()));
 
         List<Table> program1Tables = new ArrayList<>();
         program1Tables.add(new Table("Prog 1 - krok 1"));
@@ -149,7 +149,7 @@ public class Utils {
         program1Tables.get(0).getKidTables().add(kidTablesForPeriod_1.get(0));
         program1Tables.get(1).getKidTables().add(kidTablesForPeriod_1.get(1));
 
-        Kid exampleKid = new Kid(-1, "Jarek", false, kidPrograms, kidPeriods);
+        Kid exampleKid = new Kid(-1L, "Jarek", false, kidPrograms, kidPeriods);
         exampleKids.add(exampleKid);
 
         SqlSession sqlSession = getSqlSession();
@@ -232,27 +232,27 @@ public class Utils {
         kidsDao.insertKid(kid);
 
         kid.getPrograms().forEach(program -> {
-            program.setKidId(kid.getId());
+            program.setKidId(kid.getId().intValue());
             programsDao.insertProgram(program);
             program.getTables().forEach(table -> {
                 tablesDao.insertTable(table);
                 table.getTableRows().forEach(tableRow -> {
-                    tableRow.setTableId(table.getId());
+                    tableRow.setTableId(table.getId().intValue());
                     tableRowsDao.insertTableRow(tableRow);
                     tableRow.getRowFields().forEach(rowField -> {
-                        rowField.setRowId(tableRow.getId());
+                        rowField.setRowId(tableRow.getId().intValue());
                         tableFieldsDao.insertTableField(rowField);
                     });
                 });
             });
         });
         kid.getPeriods().forEach(period -> {
-            period.setKidId(kid.getId());
+            period.setKidId(kid.getId().intValue());
             periodsDao.insertPeriod(period);
             period.getKidTables().forEach(kidTable -> {
                 kidTablesDao.insertKidTable(kidTable);
                 kidTable.getResolvedFields().forEach(resolvedField -> {
-                    resolvedField.setKidTableId(kidTable.getId());
+                    resolvedField.setKidTableId(kidTable.getId().intValue());
                 });
             });
         });

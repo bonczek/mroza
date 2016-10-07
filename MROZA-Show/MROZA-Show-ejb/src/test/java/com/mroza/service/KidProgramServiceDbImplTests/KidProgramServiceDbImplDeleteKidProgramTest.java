@@ -65,8 +65,8 @@ public class KidProgramServiceDbImplDeleteKidProgramTest {
         kidProgramsService.deleteKidProgram(this.assignedProgram);
         sqlSession.commit();
 
-        assertNull(databaseUtils.getProgramById(this.assignedProgram.getId()));
-        assertNotNull(databaseUtils.getProgramById(this.program.getId()));
+        assertNull(databaseUtils.getProgramById(this.assignedProgram.getId().intValue()));
+        assertNotNull(databaseUtils.getProgramById(this.program.getId().intValue()));
     }
 
     private void setUpPrograms() {

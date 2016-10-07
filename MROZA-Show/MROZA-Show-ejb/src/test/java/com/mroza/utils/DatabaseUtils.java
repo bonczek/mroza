@@ -91,7 +91,7 @@ public class DatabaseUtils {
 
     public Kid setUpKid(String code)
     {
-        Kid kid = new Kid(-1, code, false, null, null);
+        Kid kid = new Kid(-1L, code, false, null, null);
         kidsDao.insertKid(kid);
         utilsSqlSession.commit();
         return kid;
@@ -111,7 +111,7 @@ public class DatabaseUtils {
 
     public Program setUpProgram(String symbol, String name, String description, Kid kid) {
         Program program = setUpProgram(symbol, name, description);
-        program.setKidId(kid.getId());
+        program.setKidId(kid.getId().intValue());
         programsDao.insertProgram(program);
         utilsSqlSession.commit();
         return program;
@@ -123,7 +123,7 @@ public class DatabaseUtils {
         program.setName(programToAssign.getName());
         program.setDescription(programToAssign.getDescription());
         program.setFinished(false);
-        program.setKidId(kid.getId());
+        program.setKidId(kid.getId().intValue());
         programsDao.insertProgram(program);
         utilsSqlSession.commit();
         return program;
@@ -162,12 +162,12 @@ public class DatabaseUtils {
 
     public TableRow setUpRowWithFields(String rowName, int orderNumber, int generalizationNumber, int learningNumber, Table table){
         TableRow tableRow = new TableRow(rowName,orderNumber,learningNumber,generalizationNumber);
-        tableRow.setTableId(table.getId());
+        tableRow.setTableId(table.getId().intValue());
         tableRowsDao.insertTableRow(tableRow);
         utilsSqlSession.commit();
         List<TableField> tableFields = tableRow.getRowFields();
         for(TableField field : tableFields) {
-            field.setRowId(tableRow.getId());
+            field.setRowId(tableRow.getId().intValue());
             tableFieldsDao.insertTableField(field);
         }
         utilsSqlSession.commit();
@@ -175,7 +175,7 @@ public class DatabaseUtils {
     }
 
     public Period setUpPeriod(Date beginDate, Date endDate, Kid kid) {
-        Period period = new Period(beginDate, endDate, kid.getId());
+        Period period = new Period(beginDate, endDate, kid.getId().intValue());
         periodsDao.insertPeriod(period);
         utilsSqlSession.commit();
         return period;
@@ -193,8 +193,8 @@ public class DatabaseUtils {
         for(ResolvedField resolvedField : resolvedFields)
         {
             resolvedField.setValue("OK");
-            resolvedField.setKidTableId(resolvedField.getKidTable().getId());
-            resolvedField.setTableFieldId(resolvedField.getTableField().getId());
+            resolvedField.setKidTableId(resolvedField.getKidTable().getId().intValue());
+            resolvedField.setTableFieldId(resolvedField.getTableField().getId().intValue());
             resolvedFieldsDao.updateResolvedField(resolvedField);
             utilsSqlSession.commit();
         }
@@ -203,14 +203,14 @@ public class DatabaseUtils {
         kidTable.setCollectingGeneralization(true);
         kidTable.setCollectingGeneralization(true);
         kidTable.setLastModDate(new Date());
-        kidTable.setPeriodId(kidTable.getPeriod().getId());
-        kidTable.setTableId(kidTable.getTable().getId());
+        kidTable.setPeriodId(kidTable.getPeriod().getId().intValue());
+        kidTable.setTableId(kidTable.getTable().getId().intValue());
         kidTablesDao.updateKidTable(kidTable);
         utilsSqlSession.commit();
         return kidTable;
     }
 
     public List<Table> getTablesForProgram(Program program) {
-        return tablesDao.selectTablesByProgramIdWithEdgesRowsFields(program.getId());
+        return tablesDao.selectTablesByProgramIdWithEdgesRowsFields(program.getId().intValue());
     }
 }

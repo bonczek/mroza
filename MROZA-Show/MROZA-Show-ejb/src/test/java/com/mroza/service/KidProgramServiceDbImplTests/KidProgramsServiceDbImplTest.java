@@ -69,7 +69,7 @@ public class KidProgramsServiceDbImplTest {
     public void getKidTableByIdTest() {
         Utils.initKidDeeply(exampleKids, "QWE");
         Utils.initWithBasicPrograms(examplePrograms);
-        List<Program> unusedPrograms = kidProgramsService.getUnusedProgramsByKidId(exampleKids.get(0).getId());
+        List<Program> unusedPrograms = kidProgramsService.getUnusedProgramsByKidId(exampleKids.get(0).getId().intValue());
         Assert.assertEquals(3, unusedPrograms.size());
     }
 
@@ -77,7 +77,7 @@ public class KidProgramsServiceDbImplTest {
     public void changeProgramFinishedStatusTest() {
         Utils.initWithBasicPrograms(examplePrograms);
         examplePrograms.stream().forEach(exampleProgram -> {
-            kidProgramsService.changeProgramFinishedStatus(exampleProgram.getId(), true);
+            kidProgramsService.changeProgramFinishedStatus(exampleProgram.getId().intValue(), true);
         });
         List<Program> resultedPrograms = programsDao.selectAllTemplatePrograms();
         Assert.assertEquals(true, resultedPrograms.get(0).isFinished());
@@ -88,11 +88,11 @@ public class KidProgramsServiceDbImplTest {
         Utils.initKidDeeply(exampleKids, "QWE");
         Utils.initWithBasicPrograms(examplePrograms);
         Program assignedProgram = kidProgramsService.assignProgramToKid(
-                exampleKids.get(0).getId(), examplePrograms.get(0).getId());
+                exampleKids.get(0).getId().intValue(), examplePrograms.get(0).getId().intValue());
         Assert.assertEquals(examplePrograms.get(0).getSymbol(), assignedProgram.getSymbol());
         Assert.assertEquals(examplePrograms.get(0).getDescription(), assignedProgram.getDescription());
         Assert.assertEquals(examplePrograms.get(0).getName(), assignedProgram.getName());
-        Assert.assertEquals(exampleKids.get(0).getId(), assignedProgram.getKidId());
+        Assert.assertEquals(exampleKids.get(0).getId().intValue(), assignedProgram.getKidId().intValue());
 
     }
 

@@ -60,7 +60,7 @@ public class ProgramDaoUpdateProgramTest {
         programsDao.updateProgram(this.program);
         sqlSession.commit();
 
-        Program changedProgram = programsDao.selectProgramById(this.program.getId());
+        Program changedProgram = programsDao.selectProgramById(this.program.getId().intValue());
 
         Assert.assertEquals("Updated program's name should have been changed", this.program.getName(), changedProgram.getName());
         Assert.assertEquals("Updated program's symbol should have been changed", this.program.getSymbol(), changedProgram.getSymbol());
@@ -78,7 +78,7 @@ public class ProgramDaoUpdateProgramTest {
         programsDao.updateProgram(this.program);
         sqlSession.commit();
 
-        Program changedProgram = programsDao.selectProgramById(assignedProgram.getId());
+        Program changedProgram = programsDao.selectProgramById(assignedProgram.getId().intValue());
 
         Assert.assertEquals("Updated program's assigned to kid program's name should have been changed", this.program.getName(), changedProgram.getName());
         Assert.assertEquals("Updated program's assigned to kid program's symbol should have been changed", this.program.getSymbol(), changedProgram.getSymbol());

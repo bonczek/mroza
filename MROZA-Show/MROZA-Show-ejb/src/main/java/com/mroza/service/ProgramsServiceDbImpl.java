@@ -67,7 +67,7 @@ public class ProgramsServiceDbImpl implements Serializable, ProgramsService {
 
     @Override
     public void updateProgramsWithSymbol(Program program) {
-        String symbol = programsDao.selectProgramById(program.getId()).getSymbol();
+        String symbol = programsDao.selectProgramById(program.getId().intValue()).getSymbol();
         List<Program> programsToUpdate = programsDao.selectProgramBySymbol(symbol);
         programsToUpdate.forEach(programToUpdate -> {
             programToUpdate.setName(program.getName());

@@ -71,7 +71,7 @@ public class KidsServiceDbImplTest {
     @Test
     public void getKidDetailedData() {
         Utils.initKidDeeply(exampleKids, "QWE");
-        Kid kidWithDetailedData = kidsService.getKidDetailedData(exampleKids.get(0).getId());
+        Kid kidWithDetailedData = kidsService.getKidDetailedData(exampleKids.get(0).getId().intValue());
 
         Assert.assertEquals(exampleKids.get(0).getPrograms().size(), kidWithDetailedData.getPrograms().size());
         Assert.assertEquals(exampleKids.get(0).getPeriods().size(), kidWithDetailedData.getPeriods().size());

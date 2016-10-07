@@ -51,7 +51,7 @@ class KidTableArgumentMatcher implements ArgumentMatcher {
                     if (!(kidTable.getTable().getId() == this.kidTable.getTable().getId()))
                         return false;
                 } else {
-                    if (!(kidTable.getTable().getId() == this.kidTable.getTableId()))
+                    if (!(kidTable.getTable().getId() == this.kidTable.getTableId().intValue()))
                         return false;
                 }
 

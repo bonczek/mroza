@@ -117,7 +117,7 @@ public class SyncServiceDbImpl implements Serializable, SyncService {
     }
 
     private void updateKidTableData(KidTable kidTable) {
-        KidTable kidTableToMerge = kidTablesDao.selectKidTableById(kidTable.getId());
+        KidTable kidTableToMerge = kidTablesDao.selectKidTableById(kidTable.getId().intValue());
         if(kidTableToMerge != null) {
 //            TODO: add modify data checking
             kidTablesDao.updateKidTable(kidTable);
@@ -125,7 +125,7 @@ public class SyncServiceDbImpl implements Serializable, SyncService {
     }
 
     private void updateResolvedField(ResolvedField resolvedField) {
-        ResolvedField resolvedFieldToMerge = resolvedFieldsDao.selectResolvedFieldById(resolvedField.getId());
+        ResolvedField resolvedFieldToMerge = resolvedFieldsDao.selectResolvedFieldById(resolvedField.getId().intValue());
         if(resolvedFieldToMerge == null)
             resolvedFieldsDao.insertResolvedField(resolvedField);
         else {

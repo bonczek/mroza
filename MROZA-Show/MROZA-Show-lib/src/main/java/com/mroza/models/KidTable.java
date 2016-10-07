@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,51 +40,84 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "KidTab")
+@javax.persistence.Table(name = "kidtab")
 public class KidTable extends FilterableModel implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "collecting_learning", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "collecting_learning")
     private boolean collectingLearning;
-    @Column(name = "collecting_generalization", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "collecting_generalization")
     private boolean collectingGeneralization;
-    @Column(name = "finished_learning", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "finished_learning")
     private boolean finishedLearning;
-    @Column(name = "finished_generalization", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "finished_generalization")
     private boolean finishedGeneralization;
-    @Column
+    
+    @Size(max = 2147483647)
+    @Column(name = "note")
     private String note;
-    @Column(name = "IOA", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ioa")
     private boolean isIOA;
-    @Column(name = "pretest", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "pretest")
     private boolean isPretest;
+    
     @Column(name = "last_edit_datetime")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModDate;
+    
     @Column(name = "generalization_fill_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date generalizationFillDate;
+    
     @Column(name = "learning_fill_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date learningFillDate;
 
+    @Transient
     private Integer tableId;
+    
+    @Transient
     private Integer periodId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "table", referencedColumnName = "id")
+    @JoinColumn(name = "tab_id", referencedColumnName = "id")
     private Table table;
+    
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "period", referencedColumnName = "id")
+    @JoinColumn(name = "resolve_period_id", referencedColumnName = "id")
     private Period period;
+    
     @OneToMany(mappedBy = "kidTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ResolvedField> resolvedFields;
 
@@ -127,7 +161,7 @@ public class KidTable extends FilterableModel implements Serializable {
     public KidTable(Long id, boolean collectingLearning, boolean collectingGeneralization, boolean finishedLearning,
                     boolean finishedGeneralization, String note, boolean isIOA, boolean isPretest, Date lastModDate,
                     Date generalizationFillDate, Date learningFillDate, long tableId, long periodId) {
-        this.id = (int)(long) id;
+        this.id = id;
         this.collectingLearning = collectingLearning;
         this.collectingGeneralization = collectingGeneralization;
         this.finishedLearning = finishedLearning;

@@ -26,6 +26,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,32 +37,55 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "Program")
+@javax.persistence.Table(name = "program")
 public class Program extends FilterableModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "symbol")
     private String symbol;
-    @Column(nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "name")
     private String name;
-    @Column(nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "description")
     private String description;
-    @Column(nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "finished")
     private boolean finished;
+    
     //TODO: Does it field is used for something?
+    @Transient
     private Integer collectedData;
     
+    @Transient
     private Integer kidId;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kid", referencedColumnName = "id")
+    @JoinColumn(name = "kid_id", referencedColumnName = "id")    
     private Kid kid;
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Table> tables;
@@ -105,12 +129,12 @@ public class Program extends FilterableModel implements Serializable {
     }
 
     public Program(Integer id, boolean finished) {
-        this.id = id;
+        this.id = Integer.toUnsignedLong(id);
         this.finished = finished;
     }
 
     public Program(int id, String symbol, String name, String description, boolean finished, int kidId, List<Table> tables) {
-        this.id = id;
+        this.id = Integer.toUnsignedLong(id);
         this.symbol = symbol;
         this.name = name;
         this.description = description;

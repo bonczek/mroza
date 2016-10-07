@@ -25,7 +25,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,30 +38,39 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "Kid")
+@javax.persistence.Table(name = "kid")
 @NamedQueries({
-    @NamedQuery(name = "selectAllKids", query = "FROM Kid k WHERE k.archived = false ORDER BY k.code"),
-    @NamedQuery(name = "selectKidWithEdgesProgramsAndPeriods", query = "FROM Kid k WHERE k.id = :kidId"),
-    @NamedQuery(name = "selectKidWithCode", query = "FROM Kid k WHERE k.code = :code")
+    @NamedQuery(name = "Kid.selectAllKids", query = "SELECT k FROM Kid k WHERE k.archived = false ORDER BY k.code"),
+    @NamedQuery(name = "Kid.selectKidWithEdgesProgramsAndPeriods", query = "SELECT k FROM Kid k WHERE k.id = :kidId"),
+    @NamedQuery(name = "Kid.selectKidWithCode", query = "SELECT k FROM Kid k WHERE k.code = :code")
 })
 public class Kid implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;    
-    @Column(nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "code")
     private String code;
-    @Column(nullable = false)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "archived")
     private boolean archived;
 
     @OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Program> programs;
+    private List<Program> programs;    
     @OneToMany(mappedBy = "kid", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Period> periods;
 }

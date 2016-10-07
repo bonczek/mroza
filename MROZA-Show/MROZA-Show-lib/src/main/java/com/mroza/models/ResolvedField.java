@@ -24,40 +24,62 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@javax.persistence.Table(name = "tabfieldresolve")
 public class ResolvedField implements Serializable {
 
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull    
+    @Column(name = "value")
     private String value;
 
+    @Transient
     private Integer kidTableId;
+    
+    @Transient
     private Integer tableFieldId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kidTable", referencedColumnName = "id")
+    @JoinColumn(name = "kid_tab_id", referencedColumnName = "id")
     private KidTable kidTable;
+    
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tableField", referencedColumnName = "id")
+    @JoinColumn(name = "tab_field_id", referencedColumnName = "id")
     private TableField tableField;
 
     public ResolvedField(String value, KidTable kidTable, TableField tableField) {
         this.id = null;
         this.value = value;
-        this.kidTableId = kidTable.getId();
-        this.tableFieldId = tableField.getId();
+        this.kidTableId = kidTable.getId().intValue();
+        this.tableFieldId = tableField.getId().intValue();
         this.kidTable = kidTable;
         this.tableField = tableField;
     }
 
     public ResolvedField(Long id, String value, Long kidTableId, Long tableFieldId) {
-        this.id = (int)(long)id;
+        this.id = id;
         this.value = value;
         this.kidTableId = (int)(long)kidTableId;
         this.tableFieldId = (int)(long)tableFieldId;

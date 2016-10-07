@@ -26,6 +26,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,26 +37,40 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "TabRow")
+@javax.persistence.Table(name = "tabrow")
 public class TableRow implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "ord", nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ord")
     private Integer orderNum;
-    @Column(name = "value", nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "value")
     private String name;
+        
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "table", referencedColumnName = "id")
+    @JoinColumn(name = "tab_id", referencedColumnName = "id")
     private Table table;
     
+    @Transient
     private Integer tableId;
     
     @OneToMany(mappedBy = "row", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

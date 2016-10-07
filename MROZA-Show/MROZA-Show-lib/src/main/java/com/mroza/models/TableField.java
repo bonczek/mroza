@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,26 +33,38 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@javax.persistence.Table(name = "TabField")
+@javax.persistence.Table(name = "tabfield")
 public class TableField implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "ord", nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ord")
     private Integer orderNum;
-    @Column(nullable = false)
+    
+    @Basic(optional = false)
+    @NotNull    
+    @Column(name = "type")
     private String type;
     
+    @Transient
     private Integer rowId;
+    
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "row", referencedColumnName = "id")
+    @JoinColumn(name = "row_id", referencedColumnName = "id")
     private TableRow row;
 
     public TableField(Integer orderNum, String type) {

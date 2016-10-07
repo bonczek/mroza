@@ -56,7 +56,7 @@ public class KidProgramsServiceDbImpl implements Serializable, KidProgramsServic
 
     @Override
     public void saveTable(Table table) {
-        if(table.getId() == -1) {
+        if(table.getId().intValue() == -1) {
             addNewTable(table);
         } else {
             updateTable(table);
@@ -78,7 +78,7 @@ public class KidProgramsServiceDbImpl implements Serializable, KidProgramsServic
         tableRowsDao.deleteRows(table);
         tablesDao.updateTable(table);
         insertRowsAndFields(table);
-        List<KidTable> kidTables = kidTablesDao.selectKidTablesWithResolvedFieldsByTableId(table.getId());
+        List<KidTable> kidTables = kidTablesDao.selectKidTablesWithResolvedFieldsByTableId(table.getId().intValue());
         if(!(kidTables.isEmpty()))
         {
             for(KidTable kidTable : kidTables) {
@@ -99,13 +99,13 @@ public class KidProgramsServiceDbImpl implements Serializable, KidProgramsServic
 
     private void insertRowsAndFields(Table table) {
         for(TableRow row : table.getTableRows()) {
-            row.setTableId(table.getId());
+            row.setTableId(table.getId().intValue());
             tableRowsDao.insertTableRow(row);
         }
 
         for(TableRow row : table.getTableRows()) {
             for(TableField field : row.getRowFields()) {
-                field.setRowId(row.getId());
+                field.setRowId(row.getId().intValue());
                 tableFieldsDao.insertTableField(field);
             }
         }
@@ -155,7 +155,7 @@ public class KidProgramsServiceDbImpl implements Serializable, KidProgramsServic
 
     @Override
     public boolean checkIfProgramHasTables(Program program) {
-        List<Table> tables = tablesDao.selectTablesByProgramIdWithEdgesRowsFields(program.getId());
+        List<Table> tables = tablesDao.selectTablesByProgramIdWithEdgesRowsFields(program.getId().intValue());
         if(tables.isEmpty())
             return false;;
         return true;
