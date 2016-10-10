@@ -49,8 +49,9 @@ import javax.validation.constraints.Size;
 @javax.persistence.Table(name = "kid")
 @NamedQueries({
     @NamedQuery(name = "Kid.selectAllKids", query = "SELECT k FROM Kid k WHERE k.archived = false ORDER BY k.code"),
-    @NamedQuery(name = "Kid.selectKidWithEdgesProgramsAndPeriods", query = "SELECT k FROM Kid k WHERE k.id = :kidId"),
-    @NamedQuery(name = "Kid.selectKidWithCode", query = "SELECT k FROM Kid k WHERE k.code = :code")
+    @NamedQuery(name = "Kid.selectKidWithEdgesProgramsAndPeriods", query = "SELECT k FROM Kid k JOIN FETCH k.programs, k.periods WHERE k.id = :kidId"),
+    @NamedQuery(name = "Kid.selectKidWithCode", query = "SELECT k FROM Kid k WHERE k.code = :code"),
+    @NamedQuery(name = "Kid.deleteKid", query="DELETE FROM Kid k WHERE k.id = :id OR (code = :code)")
 })
 public class Kid implements Serializable {
 

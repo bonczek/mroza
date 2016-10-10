@@ -19,53 +19,41 @@
 package com.mroza.dao;
 
 import com.mroza.models.Kid;
-import com.mroza.models.Program;
-import org.apache.ibatis.session.SqlSession;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 public class KidsDao {
-
-    @Inject
-    private SqlSession sqlSession;
-    
+ 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public  List<Kid> selectAllKids() {                
-        List<Kid> kids = sqlSession.selectList("kidsMapper.selectAllKids");
-        if (kids == null) {
+    public  List<Kid> selectAllKids() {                        
+        List<Kid> kids = entityManager.createNamedQuery("Kid.selectAllKids").getResultList();
+        if(kids == null)
             return new ArrayList<>();
-        }
         return kids;
-//        List<Kid> kids = entityManager.createNamedQuery("selectAllKids").getResultList();
-//        if(kids == null)
-//            return new ArrayList<>();
-//        return kids;
     }
 
     public Kid selectKidWithEdgesProgramsAndPeriods(int kidId) {
-        return sqlSession.selectOne("kidsMapper.selectKidWithEdgesProgramsAndPeriods", kidId);
+        return (Kid) entityManager.createNamedQuery("Kid.selectKidWithEdgesProgramsAndPeriods")
+                .setParameter("kidId", kidId).getSingleResult();        
     }
 
     public void insertKid(Kid kid) {
-        sqlSession.insert("kidsMapper.insertKid", kid);
+        entityManager.persist(kid);        
     }
 
     // TODO: to fix -> bulk delete
-    public void deleteKids(List<Kid> kids) {
-        for(Kid kid : kids) {
-            sqlSession.delete("kidsMapper.deleteKid", kid);
+    public void deleteKids(List<Kid> kids) {        
+        for(Kid kid : kids) {           
+            entityManager.createNamedQuery("Kid.deleteKid").setParameter("id", kid.getId()).setParameter("code", kid.getCode()).executeUpdate();
         }
     }
 
     public List<Kid> selectKidsWithCode(String code) {
-        return sqlSession.selectList("kidsMapper.selectKidWithCode", code);
+        return entityManager.createNamedQuery("Kid.selectKidWithCode").setParameter("code", code).getResultList();        
     }
 }
