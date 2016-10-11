@@ -38,6 +38,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -50,6 +52,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity
 @javax.persistence.Table(name = "resolveperiod")
+@NamedQueries({
+    @NamedQuery(name = "Period.selectAllPeriods", query = "SELECT p FROM Period p"),
+    @NamedQuery(name = "Period.selectPeriodById", query = "SELECT p FROM Period p WHERE p.id = :id")    
+})
 public class Period implements Serializable {
 
     @Id

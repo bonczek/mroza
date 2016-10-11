@@ -26,32 +26,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-public class PeriodsDao {
-
-    @Inject
-    private SqlSession sqlSession;
+public class PeriodsDao {    
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<Period> selectAllPeriods() {
-        List<Period> periods = sqlSession.selectList("periodsMapper.selectAllPeriods");
+        List<Period> periods = entityManager.createNamedQuery("Period.selectAllPeriods").getResultList();
         if (periods == null)
             return new ArrayList<>();
         return periods;
     }
 
     public void insertPeriod(Period period) {
-        sqlSession.insert("periodsMapper.insertPeriod", period);
+        entityManager.persist(period);        
     }
 
     public void updatePeriodBeginAndEndDate(Period period) {
-        sqlSession.update("periodsMapper.updatePeriodBeginAndEndDate", period);
+        //TODO: update only dates? Exception when period is not managed
+        entityManager.merge(period);        
     }
 
     public Period selectPeriodById(Integer periodId) {
-        return sqlSession.selectOne("periodsMapper.selectPeriodById", periodId);
+        return (Period) entityManager.createNamedQuery("Period.selectPeriodById").setParameter("id", periodId).getSingleResult();        
     }
 
     public void removePeriod(Period period) {
-        sqlSession.delete("periodsMapper.deletePeriod", period);
+        entityManager.remove(period);        
     }
 }
