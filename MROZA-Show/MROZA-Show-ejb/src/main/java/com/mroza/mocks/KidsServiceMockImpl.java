@@ -28,6 +28,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
 
 @KidsServiceMock
@@ -55,7 +56,7 @@ public class KidsServiceMockImpl implements Serializable, KidsService {
         }
 
         Kid kid = kidsList.get(kidsId);
-        kid.setPrograms(programsList);
+        kid.setPrograms(new HashSet<>(programsList));
 
         return kid;
     }
