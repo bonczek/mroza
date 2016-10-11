@@ -149,13 +149,13 @@ public class Utils {
         program1Tables.get(0).getKidTables().add(kidTablesForPeriod_1.get(0));
         program1Tables.get(1).getKidTables().add(kidTablesForPeriod_1.get(1));
 
-        Kid exampleKid = new Kid(-1L, "Jarek", false, kidPrograms, kidPeriods);
-        exampleKids.add(exampleKid);
-
-        SqlSession sqlSession = getSqlSession();
-        initUtilsDaos();
-        insertKidDeeply(exampleKid);
-        sqlSession.commit();
+//        Kid exampleKid = new Kid(-1L, "Jarek", false, kidPrograms, kidPeriods);
+//        exampleKids.add(exampleKid);
+//
+//        SqlSession sqlSession = getSqlSession();
+//        initUtilsDaos();
+//        insertKidDeeply(exampleKid);
+//        sqlSession.commit();
     }
 
     private static void initUtilsDaos() {
