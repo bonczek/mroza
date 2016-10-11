@@ -92,7 +92,7 @@ public class KidProgramsModel implements Serializable {
     }
 
     public KidProgramsModel(KidPeriodsService kidPeriodsService, Kid kid, List<Program> assignedPrograms, List<Program> programsWithCollectedData) {
-        kidId = kid.getId();
+        kidId = kid.getId().intValue();
         scheduleModel = new DefaultScheduleModel();
         selectedCalendarRepresentationOfPeriod = null;
         newPeriod = new Period(new Date(), new Date());
@@ -151,7 +151,7 @@ public class KidProgramsModel implements Serializable {
     public void refreshProgramsForSelectedPeriod() {
         if(selectedCalendarRepresentationOfPeriod != null) {
             Period currentlySelectedPeriod = getCurrentSelectedPeriod();
-            kidTablesForPeriod = new FilterableList<>(kidPeriodsService.getKidTablesWithTableAndProgramByPeriodId(currentlySelectedPeriod.getId()));
+            kidTablesForPeriod = new FilterableList<>(kidPeriodsService.getKidTablesWithTableAndProgramByPeriodId(currentlySelectedPeriod.getId().intValue()));
         }
         else
             kidTablesForPeriod = new FilterableList<>();
@@ -169,7 +169,7 @@ public class KidProgramsModel implements Serializable {
     }
 
     private void parsePeriodsToScheduleEvents() {
-        List<Period> periods = kid.getPeriods();
+        List<Period> periods = new ArrayList<>(kid.getPeriods());
         if(periods != null && !periods.isEmpty()) {
             Date today = new Date();
             for(Period period : periods) {

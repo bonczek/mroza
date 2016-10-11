@@ -53,7 +53,7 @@ public class NewProgramsBean implements Serializable {
 
     public void initView() {
         if(program.getId() != null) {
-            program = programsService.retrieveProgram(program.getId());
+            program = programsService.retrieveProgram(program.getId().intValue());
         }
     }
 

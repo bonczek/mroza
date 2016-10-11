@@ -86,7 +86,7 @@ public class KidsChooseTableBean implements Serializable {
     }
 
     private void refreshChosenTable(Integer chosenTabId) {
-        chosenTable = tables.stream().filter(table -> table.getId() == chosenTabId).findFirst().get();
+        chosenTable = tables.stream().filter(table -> table.getId().intValue() == chosenTabId).findFirst().get();
     }
 
     public void changeTableSelection(int selectedTabId) {

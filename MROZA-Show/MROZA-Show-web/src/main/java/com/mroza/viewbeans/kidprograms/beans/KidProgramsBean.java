@@ -37,6 +37,7 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -81,8 +82,8 @@ public class KidProgramsBean implements Serializable {
         if(reloadData) {
             reloadData = false;
             Kid kid = kidsService.getKidDetailedData(model.getKidId());
-            List<Program> assignedPrograms = kid.getPrograms();
-            List<Program> programsWithCollectedData = kidProgramsService.getKidProgramsWithCollectedData(kid.getId());
+            List<Program> assignedPrograms = new ArrayList<>(kid.getPrograms());
+            List<Program> programsWithCollectedData = new ArrayList<>(kidProgramsService.getKidProgramsWithCollectedData(kid.getId().intValue()));
             model = new KidProgramsModel(kidPeriodsService, kid, assignedPrograms, programsWithCollectedData);
         }
     }
@@ -106,7 +107,7 @@ public class KidProgramsBean implements Serializable {
         }
 
         Period newPeriod = model.getNewPeriod();
-        newPeriod.setKidId(model.getKid().getId());
+        newPeriod.setKidId(model.getKid().getId().intValue());
         newPeriod.setKidTables(copyKidTablesFromPreviousPeriod(newPeriod));
         kidPeriodsService.addPeriod(newPeriod);
 
@@ -141,7 +142,7 @@ public class KidProgramsBean implements Serializable {
 
     // Actions
     public void assignProgramToKid(Program program) {
-        Program assignedProgram = kidProgramsService.assignProgramToKid(model.getKid().getId(), program.getId());
+        Program assignedProgram = kidProgramsService.assignProgramToKid(model.getKid().getId().intValue(), program.getId().intValue());
         model.notifyProgramAssignedToKid(assignedProgram);
     }
 
@@ -251,19 +252,19 @@ public class KidProgramsBean implements Serializable {
 
 
     public void refreshUnassignedPrograms() {
-        List<Program> programs = kidProgramsService.getUnusedProgramsByKidId(model.getKid().getId());
+        List<Program> programs = kidProgramsService.getUnusedProgramsByKidId(model.getKid().getId().intValue());
         FilterableList<Program> unassignedPrograms = new FilterableList<>(programs);
         model.setUnassignedPrograms(unassignedPrograms);
     }
 
     public void refreshProgramsNotInCurrentPeriod() {
-        List<Program> programs = kidPeriodsService.getKidProgramsNotInPeriod(model.getCurrentSelectedPeriod().getId());
+        List<Program> programs = kidPeriodsService.getKidProgramsNotInPeriod(model.getCurrentSelectedPeriod().getId().intValue());
         FilterableList<Program> programsNotInPeriod = new FilterableList<>(programs);
         model.setProgramsNotInPeriod(programsNotInPeriod);
     }
 
     public void refreshTablesInProgramByProgram(Program program) {
-        List<Table> tablesInProgram = kidPeriodsService.getTablesByProgramId(program.getId());
+        List<Table> tablesInProgram = kidPeriodsService.getTablesByProgramId(program.getId().intValue());
 //        TODO: select from db already with connected tables
         tablesInProgram.forEach(table -> table.setProgram(program));
         model.setTablesInProgram(tablesInProgram);

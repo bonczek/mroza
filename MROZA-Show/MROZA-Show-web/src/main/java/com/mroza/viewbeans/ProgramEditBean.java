@@ -77,7 +77,7 @@ public class ProgramEditBean implements Serializable {
     public void addNewTable() {
         Table newTable = new Table("");
         Program program = new Program();
-        program.setId(programId);
+        program.setId(Integer.toUnsignedLong(programId));
         newTable.setProgram(program);
         newTable.setEdited(true);
         programTables.add(newTable);
@@ -137,7 +137,7 @@ public class ProgramEditBean implements Serializable {
     public void copy(Table table) {
         Table newTable = new Table("");
         Program program = new Program();
-        program.setId(programId);
+        program.setId(Integer.toUnsignedLong(programId));
         newTable.setProgram(program);
         newTable.setEdited(true);
 

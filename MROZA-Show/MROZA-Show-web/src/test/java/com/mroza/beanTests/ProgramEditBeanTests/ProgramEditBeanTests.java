@@ -62,7 +62,7 @@ public class ProgramEditBeanTests {
         this.programEditBean.save(this.assignedTable);
 
         DatabaseUtils databaseUtils = new DatabaseUtils();
-        List<KidTable> kidTables = databaseUtils.getKidTablesForTable(this.assignedTable.getId());
+        List<KidTable> kidTables = databaseUtils.getKidTablesForTable(this.assignedTable.getId().intValue());
         assertFalse("Assigned table should have kidTable after it was edited", kidTables.isEmpty());
         assertTrue("Assigned table should have the same number of kidTables as before edition", kidTables.size() == 2);
         kidTables.forEach(kidTable ->
