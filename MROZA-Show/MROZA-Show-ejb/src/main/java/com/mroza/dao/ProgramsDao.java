@@ -26,14 +26,19 @@ import org.apache.ibatis.session.SqlSession;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public class ProgramsDao {
 
     @Inject
     private SqlSession sqlSession;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<Program> selectAllPrograms() {
-        List<Program> programs = sqlSession.selectList("programsMapper.selectAllPrograms");
+        List<Program> programs = entityManager.createNamedQuery("Program.selectAllPrograms").getResultList();
         if (programs == null)
             return new ArrayList<>();
         return programs;
@@ -69,42 +74,43 @@ public class ProgramsDao {
     }
 
     public List<Program> selectProgramBySymbol(String symbol) {
-        List<Program> programs = sqlSession.selectList("programsMapper.selectProgramBySymbol", symbol);
+        List<Program> programs = entityManager.createNamedQuery("Program.selectProgramBySymbol").setParameter("symbol", symbol).getResultList();
         if(programs == null)
             return new ArrayList<>();
         return programs;
     }
 
     public Program selectProgramById(Integer programId) {
-        return sqlSession.selectOne("programsMapper.selectProgramById", programId);
+        return (Program) entityManager.createNamedQuery("Program.selectProgramById").setParameter("id", programId).getSingleResult();
     }
 
     public List<Program> selectAllTemplatePrograms() {
-        List<Program> programs = sqlSession.selectList("programsMapper.selectAllTemplatePrograms");
+        List<Program> programs = entityManager.createNamedQuery("Program.selectAllTemplatePrograms").getResultList();
         if (programs ==  null)
             return new ArrayList<>();
         return programs;
     }
 
     public void insertProgram(Program program) {
-        sqlSession.insert("programsMapper.insertProgram", program);
+        entityManager.persist(program);        
     }
 
     public void deleteProgram(Program program) {
-        sqlSession.delete("programsMapper.deleteProgram", program);
+        entityManager.remove(program);        
     }
 
     public void deleteProgramBySymbol(String symbol) {
-        sqlSession.delete("programsMapper.deleteProgramBySymbol", symbol);
+        entityManager.createNamedQuery("Program.deleteProgramBySymbol").setParameter("symbol", symbol).executeUpdate();        
     }
 
     public void deletePrograms(List<Program> programs) {
-        for(Program program : programs)
-            sqlSession.delete("programsMapper.deleteProgram", program);
+        for(Program program : programs) {
+            entityManager.remove(program);
+        }            
     }
 
     public void updateProgram(Program program) {
-        sqlSession.update("programsMapper.updateProgram", program);
+        entityManager.merge(program);        
     }
 
     public List<Program> selectProgramAssignedToKid(Kid kid) {

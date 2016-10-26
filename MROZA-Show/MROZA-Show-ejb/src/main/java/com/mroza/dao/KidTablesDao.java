@@ -27,12 +27,17 @@ import org.apache.ibatis.session.SqlSession;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 
 public class KidTablesDao {
 
     @Inject
     private SqlSession sqlSession;
+    
+    @PersistenceContext
+    EntityManager entityManager;
 
     public KidTable selectKidTableById(Integer kidTableId) {
         return sqlSession.selectOne("kidTablesMapper.selectKidTableById", kidTableId);

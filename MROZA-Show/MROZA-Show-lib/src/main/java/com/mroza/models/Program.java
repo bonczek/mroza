@@ -36,6 +36,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -46,6 +50,43 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @javax.persistence.Table(name = "program")
+@NamedQueries({
+    @NamedQuery(name = "Program.selectAllPrograms", query = "SELECT p FROM Program p"),
+    @NamedQuery(name = "Program.selectProgramById", query = "SELECT p FROM Program p WHERE p.id = :id"),
+    @NamedQuery(name = "Program.selectProgramBySymbol", query = "SELECT p FROM Program p WHERE p.symbol = :symbol"),
+    @NamedQuery(name = "Program.selectAllTemplatePrograms", query = "SELECT p FROM Program p WHERE p.kid IS NULL"),
+    @NamedQuery(name = "Program.deleteProgramBySymbol", query = "DELETE FROM Program p WHERE p.symbol = :symbol")
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(name = "Program.selectProgramDataForChart", query = 
+            "WITH num_of_fields AS (\n"
+            + "          SELECT t.id, tf.type, count(*)\n"
+            + "          FROM tab t\n"
+            + "           JOIN tabrow tr ON tr.tab_id = t.id\n"
+            + "           JOIN tabfield tf ON tf.row_id = tr.id\n"
+            + "          GROUP BY t.id, tf.type\n"
+            + "        )\n"
+            + "        SELECT\n"
+            + "          t.id tab_id,\n"
+            + "          t.name tab_name,\n"
+            + "          kt.id kid_tab_id,\n"
+            + "          count(CASE WHEN tfr.value = 'OK' THEN 1 ELSE null END) ok_fields,\n"
+            + "          (SELECT count FROM num_of_fields WHERE id = t.id AND type = tf.type) fields_num,\n"
+            + "          tf.type fields_type,\n"
+            + "          kt.pretest,\n"
+            + "          CASE WHEN tf.type = 'U' THEN kt.learning_fill_date ELSE kt.generalization_fill_date END AS fill_date\n"
+            + "        FROM tab t\n"
+            + "         JOIN kidtab kt ON kt.tab_id = t.id\n"
+            + "         JOIN tabfieldresolve tfr ON tfr.kid_tab_id = kt.id\n"
+            + "         JOIN tabfield tf ON tf.id = tfr.tab_field_id\n"
+            + "        WHERE t.program_id = #{id}\n"
+            + "          AND (	CASE WHEN tf.type = 'U'\n"
+            + "                THEN kt.learning_fill_date IS NOT NULL AND finished_learning = true\n"
+            + "                ELSE kt.generalization_fill_date IS NOT NULL AND finished_generalization = true\n"
+            + "                END)\n"
+            + "        GROUP BY t.id, t.name, kt.id, tf.type\n"
+            + "        ORDER BY tab_name DESC, fields_type DESC")
+})
 public class Program extends FilterableModel implements Serializable {
 
     @Id
