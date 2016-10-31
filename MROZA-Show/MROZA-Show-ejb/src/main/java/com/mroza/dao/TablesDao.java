@@ -25,40 +25,43 @@ import org.apache.ibatis.session.SqlSession;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 
 public class TablesDao {
-
-    @Inject
-    private SqlSession sqlSession;
+   
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<Table> selectAllTables() {
-        List<Table> tables = sqlSession.selectList("tablesMapper.selectAllTables");
+        List<Table> tables = entityManager.createNamedQuery("Table.selectAllTables").getResultList();                
         if(tables == null)
             return new ArrayList<>();
         return tables;
     }
 
     public void insertTable(Table table) {
-        sqlSession.insert("tablesMapper.insertTable", table);
+        entityManager.persist(table);        
     }
 
     public List<Table> selectTablesByProgramIdWithEdgesRowsFields(int programId) {
-        List<Table> tables = sqlSession.selectList("tablesMapper.selectTablesByProgramIdWithEdgesRowsFields", programId);
+        List<Table> tables = entityManager.createNamedQuery("Table.selectTablesByProgramIdWithEdgesRowsFields")
+                .setParameter("id", programId).getResultList();
         if(tables == null)
             return new ArrayList<>();
         return tables;
     }
 
     public void updateTable(Table table) {
-        sqlSession.update("tablesMapper.updateTable", table);
+        entityManager.merge(table);        
     }
 
-    public void deleteTables(List<Table> tableList) {
-      tableList.forEach((table) -> sqlSession.delete("tablesMapper.deleteTable", table));
+    public void deleteTables(List<Table> tableList) {        
+      tableList.forEach((table) -> entityManager.remove(table));
     }
 
     public void deleteTable(Table table) {
-        sqlSession.delete("tablesMapper.deleteTable", table);
+        entityManager.remove(table);        
     }
 }

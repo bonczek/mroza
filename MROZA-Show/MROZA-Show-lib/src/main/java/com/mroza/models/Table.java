@@ -38,6 +38,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,6 +53,10 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @javax.persistence.Table(name = "tab")
+@NamedQueries({
+    @NamedQuery(name = "Table.selectAllTables", query = "SELECT t FROM Table t"),
+    @NamedQuery(name = "Table.selectTablesByProgramIdWithEdgesRowsFields", query = "SELECT t FROM Table t WHERE t.program.id = :id")            
+})
 public class Table implements Serializable {
 
     @Transient
