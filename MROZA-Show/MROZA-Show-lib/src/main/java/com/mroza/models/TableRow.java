@@ -36,6 +36,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -47,6 +49,10 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @javax.persistence.Table(name = "tabrow")
+@NamedQueries({
+    @NamedQuery(name = "TableRow.selectAllTableRows", query = "SELECT t FROM TableRow t"),
+    @NamedQuery(name = "TableRow.deleteTableRows", query = "DELETE FROM TableRow t WHERE t.table.id = :id")
+})
 public class TableRow implements Serializable {
 
     @Id

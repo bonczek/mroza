@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 public class DeleteHistoryDao {
+    
+    //TODO : change to persistence context
 
     @Inject
     private SqlSession sqlSession;

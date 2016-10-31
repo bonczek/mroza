@@ -25,48 +25,63 @@ import org.apache.ibatis.session.SqlSession;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 
 public class ResolvedFieldsDao {
 
     @Inject
     private SqlSession sqlSession;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public ResolvedField selectResolvedFieldById(Integer resolvedFieldId) {
-        return sqlSession.selectOne("resolvedFieldsMapper.selectResolvedFieldById", resolvedFieldId);
+        return (ResolvedField) entityManager.createNamedQuery("ResolvedField.selectResolvedFieldById")
+                .setParameter("id", resolvedFieldId).getSingleResult();
     }
 
     public List<ResolvedField> selectAllResolvedFields() {
-        List<ResolvedField> resolvedFields = sqlSession.selectList("resolvedFieldsMapper.selectAllResolvedFields");
+        List<ResolvedField> resolvedFields = entityManager.createNamedQuery("ResolvedField.selectAllResolvedFields").getResultList();                
         if(resolvedFields == null)
             return new ArrayList<>();
         return resolvedFields;
     }
 
     public List<ResolvedField> selectNonEmptyResolvedFieldsByKidTableId(Integer kidTableId) {
-        return selectNonEmptyResolvedFields(kidTableId, "resolvedFieldsMapper.selectNonEmptyResolvedFieldsByKidTableId");
+        //TODO : why non-empty?
+        List<ResolvedField> resolvedFields = entityManager.createNamedQuery("ResolvedField.selectResolvedFieldsByKidTableId")
+                .setParameter("id", kidTableId).getResultList();
+                
+        if(resolvedFields == null) {
+            return new ArrayList();
+        } else {
+            return resolvedFields;
+        }        
     }
 
     public List<ResolvedField> selectNonEmptyResolvedFieldsByTableId(int tableId) {
-        return selectNonEmptyResolvedFields(tableId, "resolvedFieldsMapper.selectNonEmptyResolvedFieldsByTableId");
-    }
+        List<ResolvedField> resolvedFields = entityManager.createNamedQuery("ResolvedField.selectResolvedFieldsByTableId")
+                .setParameter("id", tableId).getResultList();
 
-    private List<ResolvedField> selectNonEmptyResolvedFields(int id, String select) {
-        List<ResolvedField> resolvedFields = sqlSession.selectList(select, id);
-        if (resolvedFields == null)
-            return new ArrayList<>();
-        return resolvedFields;
-    }
+        if (resolvedFields == null) {
+            return new ArrayList();
+        } else {
+            return resolvedFields;
+        }        
+    }    
 
     public void insertResolvedField(ResolvedField resolvedField) {
-        sqlSession.insert("resolvedFieldsMapper.insertResolvedField", resolvedField);
+        entityManager.persist(resolvedField);        
     }
 
     public void updateResolvedField(ResolvedField resolvedField) {
-        sqlSession.update("resolvedFieldsMapper.updateResolvedField", resolvedField);
+        entityManager.merge(resolvedField);        
     }
 
     public void deleteResolvedFieldsByKidTable(KidTable kidTable) {
+        //TODO: refactor
         sqlSession.delete("resolvedFieldsMapper.deleteResolvedFieldsByKidTableId", kidTable.getId());
     }
 }

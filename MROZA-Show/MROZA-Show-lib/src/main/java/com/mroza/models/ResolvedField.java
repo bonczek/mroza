@@ -33,6 +33,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -42,6 +44,12 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity
 @javax.persistence.Table(name = "tabfieldresolve")
+@NamedQueries({
+    @NamedQuery(name = "ResolvedField.selectResolvedFieldById", query = "SELECT r FROM ResolvedField r WHERE r.id = :id"),
+    @NamedQuery(name = "ResolvedField.selectAllResolvedFields", query = "SELECT r FROM ResolvedField"),
+    @NamedQuery(name = "ResolvedField.selectResolvedFieldsByKidTableId", query = "SELECT r FROM ResolvedField r WHERE r.kidTable.id = :id"),
+    @NamedQuery(name = "ResolvedField.selectResolvedFieldsByTableId", query = "SELECT r FROM ResolvedField r WHERE r.kidTable.table.id = :id")
+})
 public class ResolvedField implements Serializable {
 
     @Id

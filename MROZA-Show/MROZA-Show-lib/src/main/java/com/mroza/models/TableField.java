@@ -33,6 +33,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -42,6 +44,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity
 @javax.persistence.Table(name = "tabfield")
+@NamedQuery(name = "TableField.selectAllTableFields", query = "SELECT t FROM TableField t")
 public class TableField implements Serializable {
 
     @Id

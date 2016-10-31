@@ -26,24 +26,34 @@ import org.apache.ibatis.session.SqlSession;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public class TableFieldsDao {
 
     @Inject
     private SqlSession sqlSession;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<TableField> selectAllTableFields() {
-        List<TableField> tableFields = sqlSession.selectList("tableFieldsMapper.selectAllTableFields");
+        List<TableField> tableFields = entityManager.createNamedQuery("TableField.selectAllTableFields").getResultList();                
         if(tableFields == null)
             return new ArrayList<>();
         return tableFields;
     }
 
     public void insertTableField(TableField tableField) {
-        sqlSession.insert("tableFieldsMapper.insertTableField", tableField);
+        entityManager.persist(tableField);        
     }
 
     public void deleteFields(Table table) {
+        //TODO: can be refactored        
         sqlSession.delete("tableFieldsMapper.deleteTableFields", table.getId());
+    }
+    
+    public void deleteField(TableField field) {
+        entityManager.remove(field);
     }
 }
