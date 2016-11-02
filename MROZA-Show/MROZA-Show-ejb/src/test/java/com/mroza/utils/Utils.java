@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 public class Utils {
@@ -58,6 +59,15 @@ public class Utils {
         exampleKids.stream().forEach(kidsDao::insertKid);
         sqlSession.commit();
     }
+    
+    public static List<Kid> basicKids() {
+        List<Kid> exampleKids = new ArrayList<>();
+        exampleKids.add(new Kid());
+        exampleKids.add(new Kid());
+        exampleKids.get(0).setCode("Jacek");
+        exampleKids.get(1).setCode("Julia");
+        return exampleKids;
+    }
 
     public static void initWithBasicKidWithCode(List<Kid> exampleKids, List<String> codes) {
         for(String code : codes) {
@@ -69,6 +79,16 @@ public class Utils {
         SqlSession sqlSession = getSqlSession();
         exampleKids.stream().forEach(kidsDao::insertKid);
         sqlSession.commit();
+    }
+    
+    public static List<Kid> basicKidWithCode(List<String> codes) {
+        List<Kid> exampleKids = new ArrayList();
+        for (String code : codes) {
+            Kid newKid = new Kid();
+            newKid.setCode(code);
+            exampleKids.add(newKid);
+        }
+        return exampleKids;
     }
 
 
@@ -157,7 +177,7 @@ public class Utils {
 //        insertKidDeeply(exampleKid);
 //        sqlSession.commit();
     }
-
+       
     private static void initUtilsDaos() {
         SqlSession sqlSession = getSqlSession();
         if(tablesDao != null)

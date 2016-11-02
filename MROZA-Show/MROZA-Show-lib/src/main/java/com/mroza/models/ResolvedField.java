@@ -46,7 +46,7 @@ import javax.validation.constraints.NotNull;
 @javax.persistence.Table(name = "tabfieldresolve")
 @NamedQueries({
     @NamedQuery(name = "ResolvedField.selectResolvedFieldById", query = "SELECT r FROM ResolvedField r WHERE r.id = :id"),
-    @NamedQuery(name = "ResolvedField.selectAllResolvedFields", query = "SELECT r FROM ResolvedField"),
+    @NamedQuery(name = "ResolvedField.selectAllResolvedFields", query = "SELECT r FROM ResolvedField r"),
     @NamedQuery(name = "ResolvedField.selectResolvedFieldsByKidTableId", query = "SELECT r FROM ResolvedField r WHERE r.kidTable.id = :id"),
     @NamedQuery(name = "ResolvedField.selectResolvedFieldsByTableId", query = "SELECT r FROM ResolvedField r WHERE r.kidTable.table.id = :id")
 })

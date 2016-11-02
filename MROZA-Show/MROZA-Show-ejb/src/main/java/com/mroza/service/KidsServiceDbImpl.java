@@ -26,6 +26,7 @@ import com.mroza.qualifiers.KidsServiceImpl;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
+import javax.transaction.Transactional;
 
 @KidsServiceImpl
 public class KidsServiceDbImpl implements Serializable, KidsService {
@@ -43,6 +44,7 @@ public class KidsServiceDbImpl implements Serializable, KidsService {
         return kidsDao.selectKidWithEdgesProgramsAndPeriods(kidsId);
     }
 
+    @Transactional
     @Override
     public void saveKid(Kid kid) {
         kidsDao.insertKid(kid);
